@@ -26,7 +26,7 @@
                 <th>Count</th>
                 <th>Price</th>
                 <th>User's Name</th>
-
+                <th>Action</th>
             </tr>
 
 
@@ -38,10 +38,28 @@
                     <td>{{$product->count}}</td>
                     <td>{{$product->price}}</td>
                     <td>{{$product->user->name}}</td>
+                    @if($current_id == $product->user->id)
+                    <td class="d-flex">
+                        <a href="/products/edit/{{$product->id}}" class="btn btn-warning mr-2">Edit</a>
+
+                        <form action="/products/delete/{{$product->id}}" method="POST">
+                            @csrf
+                            <input type="submit" value="Delete" class="btn btn-danger">
+                        </form>
+                    </td>
+                    @else
+                        <td>
+                            <form action="/products/toCart/{{$product->id}}" method="POST">
+                                @csrf
+                                <input type="submit" value="Add to Cart" class="btn btn-success">
+                            </form>
+                        </td>
+
+                    @endif
                 </tr>
             @endforeach
         </table>
     </div>
-    
+
 </body>
 </html>

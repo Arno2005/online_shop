@@ -13,8 +13,9 @@ class ProductController extends Controller
 {
     public function index(){
         $products = Product::with(["user","carts", "histories"])->get();
+        $current_id = Auth::id();
 
-        return view("pages.products.index", compact(["products"]));
+        return view("pages.products.index", compact(["products", "current_id"]));
     }
 
     public function create(){
@@ -39,5 +40,34 @@ class ProductController extends Controller
 
         return redirect("/products");
 
+    }
+
+    public function edit($id){
+        $product = Product::find($id);
+
+        return view("pages.products.edit", compact(["product"]));
+    }
+
+    public function update(Request $request, $id){
+        $product = Product::find($id);
+
+        $name = $request->name;
+        $count = $request->count;
+        $price = $request->price;
+
+        $product->name = $name;
+        $product->count = $count;
+        $product->price = $price;
+
+        $product->save();
+
+
+        return redirect("/products");
+    }
+
+    public function delete($id){
+        Product::destroy($id);
+
+        return redirect("/products");
     }
 }
